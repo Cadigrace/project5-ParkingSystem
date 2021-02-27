@@ -62,11 +62,19 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingLotExit(){
-        testParkingACar();
+     public void testParkingLotExit() throws Exception {
+        //testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();
+        //ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        Thread.sleep(500);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        double prix = ticket.getPrice();
+        assertEquals(0,prix);
+        assertEquals(1,parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+    
     }
 
 }
